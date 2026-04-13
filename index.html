@@ -1,77 +1,204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <title>CRUD Completo MockAPI</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            margin: 20px;
-        }
-
-        input {
-            margin: 5px;
-            padding: 8px;
-        }
-
-        button {
-            padding: 6px 10px;
-            margin: 2px;
-            cursor: pointer;
-        }
-
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #ccc;
-        }
-
-        th,
-        td {
-            padding: 10px;
-        }
-
-        th {
-            background: #f2f2f2;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta Nombre="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD Productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./tailwind.config.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
-<body>
+<body class="min-h-screen bg-gradient-to-br from-beige-100 via-beige-50 to-stone-100 text-beige-900">
 
-    <h2>CRUD Completo con MockAPI</h2>
 
-    <!-- FORMULARIO -->
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="email" id="email" placeholder="Email">
+  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold my-5">Gestión de productos</h1>
+    <section class="glass-card rounded-[2rem] border border-white/60 p-6 shadow-soft" data-aos="fade-up">
+      <div class="flex justify-between flex-wrap space-y-5">
+        <div class="font-mono">
+          <p>Listado de productos</p>
+          <p class="text-xs text-beige-500">Administra tu inventario de forma sencilla</p>
+        </div>
+        <div class="mb-6 flex ">
+          <button type="button" onclick="openModal('createModal')"
+            class="inline-flex items-center gap-2 rounded-2xl bg-beige-800 px-5 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-beige-900">
+            <i class="fa-solid fa-plus"></i>
+            Crear producto
+          </button>
+        </div>
+      </div>
 
-    <button onclick="crearUsuario()">Guardar</button>
-    <button onclick="obtenerUsuarios()">Refrescar</button>
-
-    <hr>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Acciones</th>
+      <div class="table-scroll overflow-x-auto">
+        <table class="min-w-full border-separate border-spacing-y-3">
+          <thead>
+            <tr class="text-left text-xs uppercase tracking-[0.18em] text-beige-500">
+              <th class="px-4 py-3">Referencia</th>
+              <th class="px-4 py-3">Nombre</th>
+              <th class="px-4 py-3">Precio</th>
+              <th class="px-4 py-3">Stock</th>
+              <th class="px-4 py-3">Estado</th>
+              <th class="px-4 py-3 text-right">Acciones</th>
             </tr>
-        </thead>
+          </thead>
+          <tbody id="products" class="text-sm text-beige-800">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-        <tbody id="tabla"></tbody>
-    </table>
+  <div id="createModal" data-modal-root class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div data-modal-backdrop class="absolute inset-0 bg-white/50 blur-xl"></div>
+    <div data-modal-panel
+      class="relative z-10 w-full max-w-2xl rounded-[2rem] border border-white/60 bg-beige-50 p-6 shadow-soft sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-beige-600">Nuevo registro</p>
+          <h3 class="mt-1 text-2xl font-semibold text-beige-900">
+            Agregar producto
+          </h3>
+        </div>
+        <button type="button" data-close-modal
+          class="rounded-full bg-white p-2 text-beige-600 transition hover:bg-beige-100 hover:text-beige-900">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-    <script src="app.js"></script>
+      <form id="createProductForm" class="mt-8 grid gap-5 md:grid-cols-2">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Nombre</span>
+          <input type="text" placeholder="Nombre del producto" name="name" aria-describedby="nameMessage"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200" />
+          <p id="nameMessage" class="font-mono text-sm"></p>
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Precio</span>
+          <input type="number" placeholder="0.00" name="price" aria-describedby="priceMessage"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200 " />
+          <p id="priceMessage" class="font-mono text-sm"></p>
 
+        </label>
+        <label class="block col-span-2">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Stock</span>
+          <input type="number" placeholder="0" name="stock" aria-describedby="stockMessage"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200" />
+          <p id="stockMessage" class="font-mono text-sm"></p>
+
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Estado</span>
+          <select name="status" aria-describedby="statusMessage"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200">
+            <option value="" selected>Seleccione un estado</option>
+            <option value="Activo">Activo</option>
+            <option value="Agotado">Agotado</option>
+          </select>
+          <p id="statusMessage" class="font-mono text-sm"></p>
+
+        </label>
+
+        <div class="mt-2 flex flex-col-reverse gap-3 md:col-span-2 sm:flex-row sm:justify-end">
+          <button type="button" data-close-modal
+            class="inline-flex items-center justify-center gap-2 rounded-2xl border border-beige-300 bg-white px-5 py-3 text-sm font-medium text-beige-800 transition hover:bg-beige-100">
+            <i class="fa-solid fa-xmark"></i>
+            Cancelar
+          </button>
+          <button type="submit" disabled
+            class="inline-flex items-center justify-center gap-2 rounded-2xl bg-beige-800 px-5 py-3 text-sm font-medium text-white transition hover:bg-beige-900 disabled:bg-beige-900/30">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Guardar producto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editModal" data-modal-root class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div data-modal-backdrop class="absolute inset-0 bg-white/50 blur-xl"></div>
+    <div data-modal-panel
+      class="relative z-10 w-full max-w-2xl rounded-[2rem] border border-white/60 bg-beige-50 p-6 shadow-soft sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-beige-600">Edición rápida</p>
+          <h3 class="mt-1 text-2xl font-semibold text-beige-900">
+            Actualizar producto
+          </h3>
+        </div>
+        <button type="button" data-close-modal
+          class="rounded-full bg-white p-2 text-beige-600 transition hover:bg-beige-100 hover:text-beige-900">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="updateProductForm" class="mt-8 grid gap-5 md:grid-cols-2">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Referencia</span>
+          <input type="text" disabled name="reference"
+            class="w-full rounded-2xl border disabled:border-beige-200 disabled:bg-beige-100/50
+             border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200" />
+
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Nombre</span>
+          <input type="text" placeholder="Nombre del producto" name="name" aria-describedby="nameMessageUpdate"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200" />
+          <p id="nameMessageUpdate" class="font-mono text-sm"></p>
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Precio</span>
+          <input type="number" placeholder="0.00" name="price" aria-describedby="priceMessageUpdate"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200 " />
+          <p id="priceMessageUpdate" class="font-mono text-sm"></p>
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Stock</span>
+          <input type="number" placeholder="0" name="stock" aria-describedby="stockMessageUpdate"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200" />
+          <p id="stockMessageUpdate" class="font-mono text-sm"></p>
+
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-2 block text-sm font-medium text-beige-700">Estado</span>
+          <select name="status" aria-describedby="statusMessageUpdate"
+            class="w-full rounded-2xl border border-beige-200 bg-white px-4 py-3 text-sm text-beige-800 outline-none transition focus:border-beige-400 focus:ring-2 focus:ring-beige-200">
+            <option value="" selected>Seleccione un estado</option>
+            <option value="Activo">Activo</option>
+            <option value="Agotado">Agotado</option>
+          </select>
+          <p id="statusMessageUpdate" class="font-mono text-sm"></p>
+
+        </label>
+
+        <div class="mt-2 flex flex-col-reverse gap-3 md:col-span-2 sm:flex-row sm:justify-end">
+          <button type="button" data-close-modal
+            class="inline-flex items-center justify-center gap-2 rounded-2xl border border-beige-300 bg-white px-5 py-3 text-sm font-medium text-beige-800 transition hover:bg-beige-100">
+            <i class="fa-solid fa-xmark"></i>
+            Cancelar
+          </button>
+          <button type="submit" disabled
+            class="inline-flex items-center justify-center gap-2 rounded-2xl bg-beige-800 px-5 py-3 text-sm font-medium text-white transition hover:bg-beige-900 disabled:bg-beige-900/30">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="./scripts.js"></script>
 </body>
 
 </html>

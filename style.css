@@ -1,0 +1,26 @@
+body {
+  font-family: "Outfit", sans-serif;
+}
+
+.glass-card {
+  background: rgba(250, 248, 245, 0.88);
+  backdrop-filter: blur(16px);
+}
+
+.table-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: #d6c4ad;
+  border-radius: 999px;
+}
+
+.error-input {
+  border-color: red !important;
+  color: red !important;
+}
+
+.success-input {
+  border-color: green !important;
+}
